@@ -44,14 +44,13 @@ class CoinValueController extends GetxController {
   Future<void> fetchValue() async {
     try {
       setLoading(true);
-      _values.clear();
+
       final data = await ApiRequestHandler.get(
         endPoint:
             'assets/${_currentCoin.name!.toLowerCase()}/history?interval=${intervals[_selectedInterval.value]}',
       );
-
+      _values.clear();
       for (var ele in data) {
-        print(ele);
         _values.add(
           CoinValue.fromJson(ele),
         );

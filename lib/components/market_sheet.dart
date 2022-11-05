@@ -1,10 +1,12 @@
 import 'package:crypto_app/components/button_widget.dart';
+import 'package:crypto_app/controllers/market_controller.dart';
 import 'package:crypto_app/style/colors.dart';
+import 'package:crypto_app/utils/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 showMarketBottomSheet(BuildContext context) {
   showModalBottomSheet(
-    // barrierColor: Colors.red,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(12),
@@ -27,12 +29,21 @@ class MarketWidget extends StatefulWidget {
 
 class _MarketWidgetState extends State<MarketWidget> {
   final _colorUtils = ColorUtils();
-  int _value = 1;
+  late int _value;
+  final _marketController = Get.find<MarketController>();
+
+  @override
+  void initState() {
+    _value = _marketController.marketType.index;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
@@ -44,8 +55,16 @@ class _MarketWidgetState extends State<MarketWidget> {
             label: 'Update Market',
             bgColor: ColorUtils().primary,
             textColor: ColorUtils().white,
-            onTap: () {},
-          )
+            onTap: () {
+              _marketController.setMarketType(
+                MarketType.values[_value],
+              );
+              Navigator.pop(context);
+            },
+          ),
+          const SizedBox(
+            height: 40,
+          ),
         ],
       ),
     );
@@ -70,17 +89,17 @@ class _MarketWidgetState extends State<MarketWidget> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          _buildRadio('Indian - INR', 1),
+          _buildRadio('Indian - INR', 0),
           Divider(
             color: ColorUtils().borderColor,
             thickness: 1,
           ),
-          _buildRadio('Bitcoin - BTC', 2),
+          _buildRadio('Bitcoin - BTC', 1),
           Divider(
             color: ColorUtils().borderColor,
             thickness: 1,
           ),
-          _buildRadio('TetherUS - USDT', 3),
+          _buildRadio('TetherUS - USDT', 2),
         ],
       ),
     );

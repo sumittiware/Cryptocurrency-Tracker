@@ -1,5 +1,5 @@
+import 'package:crypto_app/controllers/home_controller.dart';
 import 'package:crypto_app/models/coins.dart';
-import 'package:crypto_app/screens/coins_details_screen.dart';
 import 'package:crypto_app/style/colors.dart';
 import 'package:crypto_app/utils/images_utils.dart';
 import 'package:crypto_app/utils/number_utils.dart';
@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 class CoinTile extends StatelessWidget {
   final Coins coin;
   final colorUtils = ColorUtils();
+  final _controller = Get.find<HomeController>();
 
   CoinTile({
     super.key,
@@ -25,11 +26,10 @@ class CoinTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: ListTile(
-          onTap: () => Get.to(
-            CoinsDetailsScreen(
-              id: coin.id!,
-            ),
-          ),
+          onTap: () {
+            _controller.setCoin(coin);
+            Get.toNamed('/coin-detail');
+          },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),

@@ -16,3 +16,9 @@ enum CoinValueInterval {
   h12,
   d1,
 }
+
+enum MarketType {
+  inr,
+  btc,
+  usdt,
+}

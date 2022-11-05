@@ -190,6 +190,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   Widget _buildCoinSection() {
     return ListView(
+      padding: const EdgeInsets.all(0),
       shrinkWrap: true,
       children: _controller.favouriteCoins
           .map(

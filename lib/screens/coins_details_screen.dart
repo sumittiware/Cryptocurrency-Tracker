@@ -1,9 +1,6 @@
 import 'package:crypto_app/components/button_widget.dart';
-import 'package:crypto_app/components/coin_tile.dart';
 import 'package:crypto_app/components/line_chart.dart';
-import 'package:crypto_app/controllers/coin_value_controller.dart';
 import 'package:crypto_app/controllers/home_controller.dart';
-import 'package:crypto_app/models/coins.dart';
 import 'package:crypto_app/style/colors.dart';
 import 'package:crypto_app/utils/images_utils.dart';
 import 'package:crypto_app/utils/number_utils.dart';
@@ -11,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CoinsDetailsScreen extends StatefulWidget {
-  final String id;
   const CoinsDetailsScreen({
     super.key,
-    required this.id,
   });
 
   @override
@@ -22,18 +17,9 @@ class CoinsDetailsScreen extends StatefulWidget {
 }
 
 class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
-  final HomeController _controller = Get.put(HomeController());
-  final CoinValueController _coinValueController =
-      Get.put(CoinValueController());
+  final HomeController _controller = Get.find<HomeController>();
 
   final _colorUtils = ColorUtils();
-  late Coins coin;
-
-  @override
-  void initState() {
-    coin = _controller.getById(widget.id);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +35,8 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
           _buildPriceTag(),
           const Spacer(),
           CoinLineChart(
-            coin: coin,
+            coin: _controller.currentCoin,
           ),
-          _buildIntervalsList(),
           _buildTransactionTile(),
           const Spacer(),
           _buildButtonBar(),
@@ -69,7 +54,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
       child: Row(
         children: [
           Text(
-            '\$ ${NumberUtils.getTwoDecimalPos(coin.priceUsd!)}',
+            '\$ ${NumberUtils.getTwoDecimalPos(_controller.currentCoin.priceUsd!)}',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w500,
@@ -100,7 +85,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
         CircleAvatar(
           radius: 14,
           backgroundImage: ImagesUtils.getCryptoIcon(
-            coin.symbol!.toLowerCase(),
+            _controller.currentCoin.symbol!.toLowerCase(),
           ),
         ),
         const SizedBox(
@@ -110,7 +95,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              coin.name!,
+              _controller.currentCoin.name!,
               style: TextStyle(
                 color: _colorUtils.text1,
                 fontWeight: FontWeight.w500,
@@ -118,7 +103,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
               ),
             ),
             Text(
-              ' (${coin.symbol})',
+              ' (${_controller.currentCoin.symbol})',
               style: TextStyle(
                 color: _colorUtils.text3,
                 fontWeight: FontWeight.w500,
@@ -130,15 +115,21 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
         const SizedBox(
           width: 2,
         ),
-        IconButton(
-          onPressed: () {
-            _controller.addToFavourite(coin);
+        Obx(
+          () {
+            return IconButton(
+              onPressed: () {
+                _controller.addToFavourite();
+              },
+              icon: Icon(
+                (_controller.isFavourite)
+                    ? Icons.star_rounded
+                    : Icons.star_border_outlined,
+                color: _colorUtils.text2,
+                size: 24,
+              ),
+            );
           },
-          icon: Icon(
-            Icons.star_border_outlined,
-            color: _colorUtils.text2,
-            size: 24,
-          ),
         ),
         const Spacer(),
         _buildExchangeButton(),
@@ -176,46 +167,6 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
                 size: 18,
               )
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIntervalsList() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(
-        _coinValueController.intervals.length,
-        (index) => getInterval(index),
-      ),
-    );
-  }
-
-  Widget getInterval(int index) {
-    bool isSelected = _coinValueController.selectedIndex == index;
-
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          width: 1,
-          color: (isSelected) ? _colorUtils.primary : _colorUtils.text3,
-        ),
-        color:
-            (isSelected) ? _colorUtils.blueSecondary : _colorUtils.borderColor,
-      ),
-      child: InkWell(
-        onTap: () {
-          _coinValueController.setInterval(index);
-        },
-        child: Text(
-          _coinValueController.intervals[index].toUpperCase(),
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: (isSelected) ? _colorUtils.primary : _colorUtils.text3,
           ),
         ),
       ),
@@ -290,10 +241,12 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
   }
 
   Widget getVariations() {
-    double value = double.parse(coin.changePercent24Hr!);
+    double value = double.parse(_controller.currentCoin.changePercent24Hr!);
     if (value < 0) {
       return Text(
-        NumberUtils.getTwoDecimalPos(coin.changePercent24Hr!),
+        NumberUtils.getTwoDecimalPos(
+          _controller.currentCoin.changePercent24Hr!,
+        ),
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
@@ -302,7 +255,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
       );
     } else {
       return Text(
-        '+${NumberUtils.getTwoDecimalPos(coin.changePercent24Hr!)}',
+        '+${NumberUtils.getTwoDecimalPos(_controller.currentCoin.changePercent24Hr!)}',
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,

@@ -1,6 +1,7 @@
 import 'package:crypto_app/components/banner.dart';
 import 'package:crypto_app/components/coin_tile.dart';
 import 'package:crypto_app/components/heading.dart';
+import 'package:crypto_app/components/loading_widget.dart';
 import 'package:crypto_app/controllers/home_controller.dart';
 import 'package:crypto_app/style/colors.dart';
 import 'package:flutter/material.dart';
@@ -47,10 +48,7 @@ class _HomeWidgetState extends State<HomeWidget> {
           Obx(
             () => Expanded(
               child: (_controller.isLoading)
-                  ? Center(
-                      child:
-                          CircularProgressIndicator(color: _colorUtils.primary),
-                    )
+                  ? LoadingWidget()
                   : ListView(
                       padding: EdgeInsets.zero,
                       children: _controller.trendingCoins

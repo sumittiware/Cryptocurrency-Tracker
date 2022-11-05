@@ -1,7 +1,9 @@
 import 'package:crypto_app/components/coin_tile.dart';
 import 'package:crypto_app/components/market_sheet.dart';
 import 'package:crypto_app/controllers/home_controller.dart';
+import 'package:crypto_app/controllers/market_controller.dart';
 import 'package:crypto_app/style/colors.dart';
+import 'package:crypto_app/utils/enum_utils.dart';
 import 'package:crypto_app/utils/enums.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,9 @@ class MarketScreen extends StatefulWidget {
 class _MarketScreenState extends State<MarketScreen> {
   final _colorUtils = ColorUtils();
   String selected = 'All';
-  final HomeController _controller = Get.put(HomeController());
+
+  final HomeController _controller = Get.find<HomeController>();
+  final MarketController _marketController = Get.find<MarketController>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,28 +34,7 @@ class _MarketScreenState extends State<MarketScreen> {
             const SizedBox(
               height: kToolbarHeight,
             ),
-            Row(
-              children: [
-                Text(
-                  'Market is down ',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: _colorUtils.text1),
-                ),
-                Text(
-                  '-11.17%',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: _colorUtils.red),
-                ),
-                const Spacer(),
-                Image.asset(
-                  'assets/images/search.png',
-                )
-              ],
-            ),
+            _buidAppBar(),
             Text(
               'In the past 24 hours',
               style: TextStyle(
@@ -74,31 +57,33 @@ class _MarketScreenState extends State<MarketScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  InkWell(
-                    onTap: () => showMarketBottomSheet(context),
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: _colorUtils.borderColor),
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Market- INR',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _colorUtils.text3,
+                  Obx(() {
+                    return InkWell(
+                      onTap: () => showMarketBottomSheet(context),
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(color: _colorUtils.borderColor),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Market- ${EnumUtils().marektEnumToString(_marketController.marketType)}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: _colorUtils.text3,
+                              ),
                             ),
-                          ),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: _colorUtils.text3,
-                          )
-                        ],
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: _colorUtils.text3,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -145,6 +130,31 @@ class _MarketScreenState extends State<MarketScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buidAppBar() {
+    return Row(
+      children: [
+        Text(
+          'Market is down ',
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: _colorUtils.text1),
+        ),
+        Text(
+          '-11.17%',
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: _colorUtils.red),
+        ),
+        const Spacer(),
+        Image.asset(
+          'assets/images/search.png',
+        )
+      ],
     );
   }
 
