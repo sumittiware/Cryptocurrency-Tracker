@@ -43,12 +43,13 @@ class ButtonWidget extends StatefulWidget {
   final Color textColor;
   final Function() onTap;
 
-  const ButtonWidget(
-      {super.key,
-      required this.label,
-      required this.bgColor,
-      required this.textColor,
-      required this.onTap});
+  const ButtonWidget({
+    super.key,
+    required this.label,
+    required this.bgColor,
+    required this.textColor,
+    required this.onTap,
+  });
 
   @override
   State<ButtonWidget> createState() => _ButtonWidgetState();
@@ -56,6 +57,7 @@ class ButtonWidget extends StatefulWidget {
 
 class _ButtonWidgetState extends State<ButtonWidget> {
   final _colorUtils = ColorUtils();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -65,20 +67,21 @@ class _ButtonWidgetState extends State<ButtonWidget> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-              color: widget.bgColor,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                color: _colorUtils.primary,
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0, 2),
-                  blurRadius: 4,
-                  spreadRadius: 0,
-                  color: _colorUtils.white.withOpacity(0.075),
-                )
-              ]),
+            color: widget.bgColor,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: _colorUtils.primary,
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(0, 2),
+                blurRadius: 4,
+                spreadRadius: 0,
+                color: _colorUtils.white.withOpacity(0.075),
+              )
+            ],
+          ),
           alignment: Alignment.center,
           child: Text(
             widget.label,

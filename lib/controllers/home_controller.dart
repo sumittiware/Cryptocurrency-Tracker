@@ -41,7 +41,7 @@ class HomeController extends GetxController {
 
     _trengingCoins.clear();
 
-    final data = await ApiRequestHandler.get(
+    final data = await ApiRequest.get(
       endPoint: 'assets',
     );
 

@@ -35,13 +35,6 @@ class _MarketScreenState extends State<MarketScreen> {
               height: kToolbarHeight,
             ),
             _buidAppBar(),
-            Text(
-              'In the past 24 hours',
-              style: TextStyle(
-                fontSize: 12,
-                color: _colorUtils.text3,
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 20,
@@ -87,27 +80,7 @@ class _MarketScreenState extends State<MarketScreen> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildOption(
-                  'All',
-                  CoinsType.all,
-                ),
-                _buildOption(
-                  'Gainer',
-                  CoinsType.gainers,
-                ),
-                _buildOption(
-                  'Losers',
-                  CoinsType.loosers,
-                ),
-                _buildOption(
-                  'Favourites',
-                  CoinsType.favourites,
-                ),
-              ],
-            ),
+            _buildTabs(),
             Divider(
               thickness: 1,
               color: _colorUtils.borderColor,
@@ -134,26 +107,62 @@ class _MarketScreenState extends State<MarketScreen> {
   }
 
   Widget _buidAppBar() {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Market is down ',
-          style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: _colorUtils.text1),
+        Row(
+          children: [
+            Text(
+              'Market is down ',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: _colorUtils.text1),
+            ),
+            Text(
+              '-11.17%',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: _colorUtils.red),
+            ),
+            const Spacer(),
+            Image.asset(
+              'assets/images/search.png',
+            )
+          ],
         ),
         Text(
-          '-11.17%',
+          'In the past 24 hours',
           style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: _colorUtils.red),
+            fontSize: 12,
+            color: _colorUtils.text3,
+          ),
         ),
-        const Spacer(),
-        Image.asset(
-          'assets/images/search.png',
-        )
+      ],
+    );
+  }
+
+  Widget _buildTabs() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _buildOption(
+          'All',
+          CoinsType.all,
+        ),
+        _buildOption(
+          'Gainer',
+          CoinsType.gainers,
+        ),
+        _buildOption(
+          'Losers',
+          CoinsType.loosers,
+        ),
+        _buildOption(
+          'Favourites',
+          CoinsType.favourites,
+        ),
       ],
     );
   }
@@ -164,17 +173,20 @@ class _MarketScreenState extends State<MarketScreen> {
   ) {
     return Obx(
       () {
-        return InkWell(
+        return GestureDetector(
           onTap: () {
             _controller.setType(type);
           },
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              color: (type == _controller.type)
-                  ? _colorUtils.primary
-                  : _colorUtils.text3,
+          child: Container(
+            // width: double.infinity,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                color: (type == _controller.type)
+                    ? _colorUtils.primary
+                    : _colorUtils.text3,
+              ),
             ),
           ),
         );

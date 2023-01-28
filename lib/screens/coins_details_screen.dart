@@ -28,17 +28,22 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          const SizedBox(
-            height: kToolbarHeight,
+          SizedBox(
+            height: MediaQuery.of(context).padding.top + 10,
           ),
           _buildAppBar(),
-          _buildPriceTag(),
-          const Spacer(),
-          CoinLineChart(
-            coin: _controller.currentCoin,
-          ),
-          _buildTransactionTile(),
-          const Spacer(),
+          Expanded(
+              child: ListView(
+            children: [
+              _buildPriceTag(),
+              const Spacer(),
+              CoinLineChart(
+                coin: _controller.currentCoin,
+              ),
+              _buildCoinInfo(),
+              _buildTransactionTile(),
+            ],
+          )),
           _buildButtonBar(),
         ],
       ),
@@ -75,7 +80,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
       children: [
         IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
           icon: const Icon(
             Icons.arrow_back_ios,
@@ -119,7 +124,9 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
           () {
             return IconButton(
               onPressed: () {
-                _controller.addToFavourite();
+                setState(() {
+                  _controller.addToFavourite();
+                });
               },
               icon: Icon(
                 (_controller.isFavourite)
@@ -140,7 +147,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
     );
   }
 
-  Widget _buildTransactionTile() {
+  Widget _buildCoinInfo() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
@@ -150,23 +157,79 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Transactions',
-                style: TextStyle(
-                  color: _colorUtils.text1,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                _buildInfoItem(
+                  'Market Cap',
+                  _controller.currentCoin.marketCapUsd.toString(),
                 ),
-              ),
-              const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 18,
-              )
-            ],
+                _buildInfoItem(
+                  'Supply',
+                  _controller.currentCoin.supply.toString(),
+                ),
+                _buildInfoItem(
+                  'Volume(24 Hr)',
+                  _controller.currentCoin.volumeUsd24Hr.toString(),
+                ),
+                _buildInfoItem(
+                  'VWap(24 Hr)',
+                  _controller.currentCoin.vwap24Hr.toString(),
+                )
+              ],
+            )),
+      ),
+    );
+  }
+
+  Widget _buildInfoItem(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title),
+          Text(
+            '\$ ${double.parse(value).toPrecision(2)}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionTile() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Material(
+        color: _colorUtils.white,
+        elevation: 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: InkWell(
+          onTap: () {
+            Get.toNamed('/transations');
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Transactions',
+                  style: TextStyle(
+                    color: _colorUtils.text1,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 18,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -205,10 +268,10 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
   Widget _buildButtonBar() {
     return Container(
       padding: const EdgeInsets.only(
-        top: 12,
-        left: 12,
-        right: 12,
-        bottom: 18,
+        top: 8,
+        left: 8,
+        right: 8,
+        bottom: 12,
       ),
       decoration: BoxDecoration(
         color: _colorUtils.white,

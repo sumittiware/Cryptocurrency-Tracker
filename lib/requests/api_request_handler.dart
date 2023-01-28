@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-class ApiRequestHandler {
+class ApiRequest {
   static const baseUrl = 'https://api.coincap.io/v2/';
 
   static Future<List<dynamic>> get({
@@ -27,7 +27,7 @@ class ApiRequestHandler {
 
       return result['data'];
     } catch (err) {
-      throw err.toString();
+      throw Exception('Something went wrong!');
     }
   }
 }

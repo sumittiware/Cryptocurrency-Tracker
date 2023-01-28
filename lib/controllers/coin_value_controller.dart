@@ -45,7 +45,7 @@ class CoinValueController extends GetxController {
     try {
       setLoading(true);
 
-      final data = await ApiRequestHandler.get(
+      final data = await ApiRequest.get(
         endPoint:
             'assets/${_currentCoin.name!.toLowerCase()}/history?interval=${intervals[_selectedInterval.value]}',
       );
