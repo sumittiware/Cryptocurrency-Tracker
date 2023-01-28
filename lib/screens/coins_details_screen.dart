@@ -33,17 +33,17 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
           ),
           _buildAppBar(),
           Expanded(
-              child: ListView(
-            children: [
-              _buildPriceTag(),
-              const Spacer(),
-              CoinLineChart(
-                coin: _controller.currentCoin,
-              ),
-              _buildCoinInfo(),
-              _buildTransactionTile(),
-            ],
-          )),
+            child: ListView(
+              children: [
+                _buildPriceTag(),
+                CoinLineChart(
+                  coin: _controller.currentCoin,
+                ),
+                _buildCoinInfo(),
+                _buildTransactionTile(),
+              ],
+            ),
+          ),
           _buildButtonBar(),
         ],
       ),

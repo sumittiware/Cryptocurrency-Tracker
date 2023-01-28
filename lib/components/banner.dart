@@ -61,11 +61,12 @@ class _BannerWidgetState extends State<BannerWidget> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                CustomButton(
+                ButtonWidget(
                   label: widget.buttonLabel,
                   onTap: widget.onTap,
                   textColor: widget.bgColor,
                   bgColor: _colorUtils.white,
+                  padding: EdgeInsets.all(8),
                 )
               ],
             ),
