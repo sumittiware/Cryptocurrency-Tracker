@@ -1,5 +1,6 @@
 import 'package:crypto_app/components/button_widget.dart';
 import 'package:crypto_app/components/line_chart.dart';
+import 'package:crypto_app/components/price_components.dart';
 import 'package:crypto_app/controllers/home_controller.dart';
 import 'package:crypto_app/style/colors.dart';
 import 'package:crypto_app/utils/images_utils.dart';
@@ -51,26 +52,11 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
   }
 
   Widget _buildPriceTag() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 16,
-      ),
-      child: Row(
-        children: [
-          Text(
-            '\$ ${NumberUtils.getTwoDecimalPos(_controller.currentCoin.priceUsd!)}',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-              color: _colorUtils.text1,
-            ),
-          ),
-          const SizedBox(
-            width: 8,
-          ),
-          getVariations()
-        ],
+    return Center(
+      child: PriceComponent(
+        initialPrice: double.parse(_controller.currentCoin.priceUsd!),
+        coinId: _controller.currentCoin.id!,
+        changes: double.parse(_controller.currentCoin.changePercent24Hr!),
       ),
     );
   }

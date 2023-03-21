@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crypto_app/components/banner.dart';
 import 'package:crypto_app/components/coin_tile.dart';
 import 'package:crypto_app/components/heading.dart';
@@ -16,14 +18,34 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
   final _colorUtils = ColorUtils();
-  final HomeController _controller = Get.put(
-    HomeController(),
-  );
+  final HomeController _controller = Get.put(HomeController());
+  late PageController _pageController;
+  late int page;
+  late Timer _timer;
 
   @override
   void initState() {
     _controller.fetchTreandingCoins();
+    _pageController = PageController();
+    page = 0;
+    _timer = Timer.periodic(Duration(seconds: 3), (_) {
+      if (page == 4) {
+        page = 0;
+      }
+      _pageController.animateToPage(
+        page,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.linear,
+      );
+      page++;
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -36,13 +58,46 @@ class _HomeWidgetState extends State<HomeWidget> {
           const SizedBox(
             height: kToolbarHeight,
           ),
-          BannerWidget(
-            onTap: () {},
-            bgColor: _colorUtils.bgBlue,
-            buttonLabel: 'Invest Today',
-            title: 'Welcome Sumit,',
-            subtitle: 'Make your first Investment today',
-            imagePath: 'assets/images/Group 101.png',
+          Container(
+            height: 180,
+            child: PageView(
+              controller: _pageController,
+              scrollDirection: Axis.horizontal,
+              children: [
+                BannerWidget(
+                  onTap: () {},
+                  bgColor: _colorUtils.bgBlue,
+                  buttonLabel: 'Invest Today',
+                  title: 'Welcome Sumit,',
+                  subtitle: 'Make your first Investment today',
+                  imagePath: 'assets/images/Group 101.png',
+                ),
+                BannerWidget(
+                  bgColor: _colorUtils.yellow,
+                  title: 'Refer and Earn',
+                  subtitle: 'Refer your Friend and Win Cryptocoins',
+                  onTap: () {},
+                  buttonLabel: 'Refer Now',
+                  imagePath: 'assets/images/26-referral.png',
+                ),
+                BannerWidget(
+                  bgColor: _colorUtils.purple,
+                  title: 'Rewards',
+                  subtitle: 'Like, Share & get free coupons',
+                  onTap: () {},
+                  buttonLabel: 'Share Now',
+                  imagePath: 'assets/images/Group.png',
+                ),
+                BannerWidget(
+                  bgColor: _colorUtils.pink,
+                  title: 'Rewards',
+                  subtitle: 'Spin Wheel & Win Free Tokens!',
+                  onTap: () {},
+                  buttonLabel: 'Get Tokens',
+                  imagePath: 'assets/images/wheel.png',
+                )
+              ],
+            ),
           ),
           HeadingWidget.h1('Trending Coins'),
           Obx(

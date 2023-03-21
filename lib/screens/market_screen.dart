@@ -15,12 +15,28 @@ class MarketScreen extends StatefulWidget {
   State<MarketScreen> createState() => _MarketScreenState();
 }
 
-class _MarketScreenState extends State<MarketScreen> {
+class _MarketScreenState extends State<MarketScreen>
+    with SingleTickerProviderStateMixin {
   final _colorUtils = ColorUtils();
-  String selected = 'All';
+  late int _currentIndex;
+  late TabController _tabController;
 
   final HomeController _controller = Get.find<HomeController>();
   final MarketController _marketController = Get.find<MarketController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    _currentIndex = 0;
+  }
+
+  _onTabClicked(int index) {
+    _tabController.animateTo(index);
+    setState(() {
+      _currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,24 +97,16 @@ class _MarketScreenState extends State<MarketScreen> {
               ),
             ),
             _buildTabs(),
-            Divider(
-              thickness: 1,
-              color: _colorUtils.borderColor,
-            ),
-            Obx(
-              () {
-                return Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: _controller
-                        .getByType()
-                        .map(
-                          (coin) => CoinTile(coin: coin),
-                        )
-                        .toList(),
-                  ),
-                );
-              },
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildList(0),
+                  _buildList(1),
+                  _buildList(2),
+                  _buildList(3),
+                ],
+              ),
             )
           ],
         ),
@@ -127,8 +135,11 @@ class _MarketScreenState extends State<MarketScreen> {
                   color: _colorUtils.red),
             ),
             const Spacer(),
-            Image.asset(
-              'assets/images/search.png',
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.search_rounded),
+              
+              padding: EdgeInsets.zero,
             )
           ],
         ),
@@ -144,53 +155,65 @@ class _MarketScreenState extends State<MarketScreen> {
   }
 
   Widget _buildTabs() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildOption(
-          'All',
-          CoinsType.all,
+    return TabBar(
+      controller: _tabController,
+      onTap: _onTabClicked,
+      tabs: [
+        Tab(
+          child: Text(
+            'All',
+            style: TextStyle(
+              color: _tabController.index == 0
+                  ? _colorUtils.primary
+                  : _colorUtils.text3,
+            ),
+          ),
         ),
-        _buildOption(
-          'Gainer',
-          CoinsType.gainers,
+        Tab(
+          child: Text(
+            'Gainer',
+            style: TextStyle(
+              color: _tabController.index == 1
+                  ? _colorUtils.primary
+                  : _colorUtils.text3,
+            ),
+          ),
         ),
-        _buildOption(
-          'Losers',
-          CoinsType.loosers,
+        Tab(
+          child: Text(
+            'Losers',
+            style: TextStyle(
+              color: _tabController.index == 2
+                  ? _colorUtils.primary
+                  : _colorUtils.text3,
+            ),
+          ),
         ),
-        _buildOption(
-          'Favourites',
-          CoinsType.favourites,
+        Tab(
+          child: Text(
+            'Favourites',
+            style: TextStyle(
+              color: _tabController.index == 3
+                  ? _colorUtils.primary
+                  : _colorUtils.text3,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildOption(
-    String label,
-    CoinsType type,
-  ) {
-    return Obx(
-      () {
-        return GestureDetector(
-          onTap: () {
-            _controller.setType(type);
-          },
-          child: Container(
-            // width: double.infinity,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                color: (type == _controller.type)
-                    ? _colorUtils.primary
-                    : _colorUtils.text3,
-              ),
-            ),
-          ),
-        );
-      },
+  Widget _buildList(int index) {
+    final type = CoinsType.values[index];
+
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: _controller
+          .getByType(type)
+          .map(
+            (coin) => CoinTile(coin: coin),
+          )
+          .toList(),
     );
   }
 }

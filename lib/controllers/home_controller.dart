@@ -8,7 +8,6 @@ class HomeController extends GetxController {
   final List<Coins> _trengingCoins = [];
   final List<Coins> _favouriteCoins = [];
   final _currentCoin = Coins().obs;
-  final _type = CoinsType.all.obs;
   final _loading = false.obs;
 
   List<Coins> get trendingCoins => [
@@ -18,7 +17,6 @@ class HomeController extends GetxController {
         ..._favouriteCoins,
       ];
   Coins get currentCoin => _currentCoin.value;
-  CoinsType get type => _type.value;
   bool get isLoading => _loading.value;
   bool get isFavourite => _favouriteCoins.contains(
         _currentCoin.value,
@@ -30,10 +28,6 @@ class HomeController extends GetxController {
 
   setLoading(bool value) {
     _loading.value = value;
-  }
-
-  setType(CoinsType type) {
-    _type.value = type;
   }
 
   Future<void> fetchTreandingCoins() async {
@@ -54,13 +48,13 @@ class HomeController extends GetxController {
     fetchFavourite();
   }
 
-  List<Coins> getByType() {
+  List<Coins> getByType(CoinsType type) {
     List<Coins> res = [];
-    if (_type.value == CoinsType.all) {
+    if (type == CoinsType.all) {
       return trendingCoins;
-    } else if (_type.value == CoinsType.favourites) {
+    } else if (type == CoinsType.favourites) {
       return favouriteCoins;
-    } else if (_type.value == CoinsType.gainers) {
+    } else if (type == CoinsType.gainers) {
       for (var element in _trengingCoins) {
         if (double.parse(element.changePercent24Hr!) >= 0) {
           res.add(element);

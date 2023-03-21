@@ -42,17 +42,15 @@ class _ButtonWidgetState extends State<ButtonWidget> {
           ),
           backgroundColor: widget.bgColor,
           foregroundColor: widget.textColor,
-          shape: (!widget.showborder)
-              ? RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                  side: BorderSide(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: (widget.showborder)
+                ? BorderSide(
                     color: _colorUtils.primary,
                     width: 1,
-                  ),
-                )
-              : RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                  )
+                : BorderSide.none,
+          ),
           padding: widget.padding,
         ),
         child: Text(widget.label),

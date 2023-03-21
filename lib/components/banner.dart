@@ -33,7 +33,7 @@ class _BannerWidgetState extends State<BannerWidget> {
       height: 160,
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: widget.bgColor,
         borderRadius: BorderRadius.circular(16),
@@ -67,6 +67,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                   textColor: widget.bgColor,
                   bgColor: _colorUtils.white,
                   padding: EdgeInsets.all(8),
+                  showborder: false,
                 )
               ],
             ),

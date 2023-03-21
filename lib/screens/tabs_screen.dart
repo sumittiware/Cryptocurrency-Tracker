@@ -1,7 +1,7 @@
 import 'package:crypto_app/screens/market_screen.dart';
 import 'package:crypto_app/screens/portfolio_screen.dart';
 import 'package:crypto_app/screens/profile_screen.dart';
-import 'package:crypto_app/screens/rewards_screen.dart';
+import 'package:crypto_app/screens/community_screen.dart';
 import 'package:crypto_app/style/colors.dart';
 import 'package:crypto_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class _TabsScreenState extends State<TabsScreen> {
   final List<Widget> _pages = const [
     HomeWidget(),
     PortfolioScreen(),
-    RewardsScreen(),
+    CommunityScreen(),
     MarketScreen(),
     ProfileScreen()
   ];
@@ -34,7 +34,7 @@ class _TabsScreenState extends State<TabsScreen> {
         items: [
           getItem(0, 'home'),
           getItem(1, 'portfolio'),
-          getItem(2, 'rewards'),
+          getItem(2, 'Community'),
           getItem(3, 'market'),
           getItem(4, 'profile'),
         ],
@@ -64,6 +64,18 @@ class _TabsScreenState extends State<TabsScreen> {
     String label,
   ) {
     String tag = label[0].toUpperCase() + label.substring(1);
+    if (index == 2) {
+      return BottomNavigationBarItem(
+        icon: Icon(
+          Icons.comment_rounded,
+        ),
+        activeIcon: Icon(
+          Icons.comment_rounded,
+          color: _colorUtils.bgBlue,
+        ),
+        label: tag,
+      );
+    }
     return BottomNavigationBarItem(
       icon: Image.asset(
         'assets/tabs/$label.png',

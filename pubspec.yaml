@@ -38,6 +38,7 @@ dependencies:
   flutter_spinkit: ^5.1.0
   get_storage: ^2.0.3
   virtual_keyboard_multi_language: ^1.0.3
+  web_socket_channel: ^2.3.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
